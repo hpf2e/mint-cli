@@ -5,6 +5,7 @@ import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import { eslint } from 'rollup-plugin-eslint'
 import { DEFAULT_EXTENSIONS } from '@babel/core'
+import json from '@rollup/plugin-json';
 
 import pkg from './package.json'
 
@@ -30,7 +31,8 @@ const rollupConfig = {
       throwOnWarning: true,
       include: ['src/**/*.ts'],
       exclude: ['node_modules/**', 'lib/**', '*.js'],
-    }),
+		}),
+		
     // 配合 commnjs 解析第三方模块
     resolve({
       // 将自定义选项传递给解析插件
@@ -39,8 +41,9 @@ const rollupConfig = {
       },
 		}),
 		// 使得 rollup 支持 commonjs 规范，识别 commonjs 规范的依赖
-    commonjs(),
-    typescript(),
+		commonjs(),
+		typescript(),
+		json(),
     babel({
       runtimeHelpers: true,
       // 只转换源代码，不运行外部依赖

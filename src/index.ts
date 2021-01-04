@@ -1,6 +1,8 @@
 // 检测node版本相关依赖
 import chalk from 'chalk';
 import semver from 'semver';
+
+import test from './commands/create';
 const requiredVersion = require('../package.json').engines.node;
 
 /**
@@ -60,7 +62,7 @@ program
         ),
       );
     }
-    // require('../lib/create')(name, options)
+    test(name, options);
   });
 
 // 创建页面命令

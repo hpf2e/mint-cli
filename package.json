@@ -20,6 +20,9 @@
     "rollup",
     "typescript"
   ],
+  "engines": {
+    "node": ">=8.9"
+  },
   "scripts": {
     "eslint": "eslint --fix src --ext .ts",
     "prettier": "prettier --write \"src/**/*.ts\"",
@@ -62,6 +65,7 @@
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
     "@microsoft/api-extractor": "^7.12.0",
+    "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
     "@types/jest": "^26.0.19",
     "@types/lodash": "^4.14.165",
@@ -86,6 +90,7 @@
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-eslint": "^7.0.0",
     "rollup-plugin-extensions": "^0.1.0",
+    "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-progress": "^1.1.2",
     "rollup-plugin-terser": "^7.0.2",
