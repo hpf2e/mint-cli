@@ -1,25 +1,23 @@
-// @ts-nocheck
+import {execSync} from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import LRU from 'lru-cache';
+import semver from 'semver';
 
-const { execSync } = require('child_process')
-const fs = require('fs')
-const path = require('path')
-const LRU = require('lru-cache')
-const semver = require('semver')
-
-let _hasYarn
+let _hasYarn = false;
 const _yarnProjects = new LRU({
   max: 10,
   maxAge: 1000
 })
-let _hasGit
+let _hasGit = false;
 const _gitProjects = new LRU({
   max: 10,
   maxAge: 1000
 })
 
 // 环境检测
-exports.hasYarn = () => {
-  if (_hasYarn != null) {
+const hasYarn = () => {
+  if (_hasYarn !== null) {
     return _hasYarn
   }
   try {
@@ -30,7 +28,8 @@ exports.hasYarn = () => {
   }
 }
 
-exports.hasProjectYarn = (cwd) => {
+// 检测是否有yarn
+const hasProjectYarn = (cwd: string) => {
   if (_yarnProjects.has(cwd)) {
     return checkYarn(_yarnProjects.get(cwd))
   }
@@ -41,13 +40,13 @@ exports.hasProjectYarn = (cwd) => {
   return checkYarn(result)
 }
 
-function checkYarn (result) {
+function checkYarn (result: any) {
   if (result && !exports.hasYarn()) throw new Error(`由于项目依赖Yarn，请安装后重试。`)
   return result
 }
 
-exports.hasGit = () => {
-  if (_hasGit != null) {
+const hasGit = () => {
+  if (_hasGit !== null) {
     return _hasGit
   }
   try {
@@ -58,7 +57,7 @@ exports.hasGit = () => {
   }
 }
 
-exports.hasProjectGit = (cwd) => {
+const hasProjectGit = (cwd: string) => {
   if (_gitProjects.has(cwd)) {
     return _gitProjects.get(cwd)
   }
@@ -74,14 +73,14 @@ exports.hasProjectGit = (cwd) => {
   return result
 }
 
-let _hasPnpm
-let _hasPnpm3orLater
+let _hasPnpm = false;
+let _hasPnpm3orLater = false;
 const _pnpmProjects = new LRU({
   max: 10,
   maxAge: 1000
 })
 
-exports.hasPnpm3OrLater = () => {
+const hasPnpm3OrLater = () => {
   if (_hasPnpm3orLater != null) {
     return _hasPnpm3orLater
   }
@@ -100,7 +99,7 @@ exports.hasPnpm3OrLater = () => {
   }
 }
 
-exports.hasProjectPnpm = (cwd) => {
+const hasProjectPnpm = (cwd: string) => {
   if (_pnpmProjects.has(cwd)) {
     return checkPnpm(_pnpmProjects.get(cwd))
   }
@@ -111,7 +110,7 @@ exports.hasProjectPnpm = (cwd) => {
   return checkPnpm(result)
 }
 
-function checkPnpm (result) {
+function checkPnpm (result: any) {
   if (result && !exports.hasPnpm3OrLater()) {
     throw new Error(`项目所依赖的 pnpm${_hasPnpm ? ' >= 3' : ''} 请安装后重试`)
   }
@@ -119,6 +118,18 @@ function checkPnpm (result) {
 }
 
 // OS
-exports.isWindows = process.platform === 'win32'
-exports.isMacintosh = process.platform === 'darwin'
-exports.isLinux = process.platform === 'linux'
+const isWindows = process.platform === 'win32'
+const isMacintosh = process.platform === 'darwin'
+const isLinux = process.platform === 'linux'
+
+export {
+	hasYarn,
+	hasGit,
+	hasProjectYarn,
+	hasProjectGit,
+	hasPnpm3OrLater,
+	hasProjectPnpm,
+	isWindows,
+	isMacintosh,
+	isLinux
+}

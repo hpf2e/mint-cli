@@ -1,11 +1,10 @@
-// @ts-nocheck
-
-const EventEmitter = require('events')
-const chalk = require('chalk')
-const execa = require('execa')
-const readline = require('readline')
-const registries = require('./registries')
-const shouldUseTaobao = require('./shouldUseTaobao')
+import EventEmitter from 'events';
+import chalk from 'chalk';
+//@ts-ignore
+import execa from 'execa';
+import readline from 'readline';
+import registries from './registries';
+import shouldUseTaobao from './shouldUseTaobao';
 
 const taobaoDistURL = 'https://npm.taobao.org/dist'
 
@@ -35,6 +34,8 @@ const packageManagerConfig = {
 }
 
 class InstallProgress extends EventEmitter {
+	_progress: number;
+
   constructor () {
     super()
 
@@ -58,14 +59,14 @@ class InstallProgress extends EventEmitter {
     this.progress = value ? 0 : -1
   }
 
-  log (value) {
+  log (value: string) {
     this.emit('log', value)
   }
 }
 
 const progress = exports.progress = new InstallProgress()
 
-function toStartOfLine (stream) {
+function toStartOfLine (stream: NodeJS.WriteStream) {
   if (!chalk.supportsColor) {
     stream.write('\r')
     return
@@ -73,17 +74,17 @@ function toStartOfLine (stream) {
   readline.cursorTo(stream, 0)
 }
 
-function checkPackageManagerIsSupported (command) {
+function checkPackageManagerIsSupported (command: string) {
   if (supportPackageManagerList.indexOf(command) === -1) {
     throw new Error(`Unknown package manager: ${command}`)
   }
 }
 
-function renderProgressBar (curr, total) {
-  const ratio = Math.min(Math.max(curr / total, 0), 1)
+function renderProgressBar (curr: string, total: string) {
+  const ratio = Math.min(Math.max(+curr / +total, 0), 1)
   const bar = ` ${curr}/${total}`
-  const availableSpace = Math.max(0, process.stderr.columns - bar.length - 3)
-  const width = Math.min(total, availableSpace)
+  const availableSpace = Math.max(0, process.stderr.columns! - bar.length - 3)
+  const width = Math.min(+total, availableSpace)
   const completeLength = Math.round(width * ratio)
   const complete = `#`.repeat(completeLength)
   const incomplete = `-`.repeat(width - completeLength)
@@ -91,7 +92,7 @@ function renderProgressBar (curr, total) {
   process.stderr.write(`[${complete}${incomplete}]${bar}`)
 }
 
-async function addRegistryToArgs (command, args, cliRegistry) {
+async function addRegistryToArgs (command: string, args: string[], cliRegistry: string) {
   const altRegistry = (
     cliRegistry || (
       (await shouldUseTaobao(command))
@@ -108,7 +109,7 @@ async function addRegistryToArgs (command, args, cliRegistry) {
   }
 }
 
-function executeCommand (command, args, targetDir) {
+function executeCommand (command: string, args: string[], targetDir: string) {
   return new Promise((resolve, reject) => {
 
     progress.enabled = false
@@ -122,7 +123,7 @@ function executeCommand (command, args, targetDir) {
     
     // filter out unwanted yarn output
     if (command === 'yarn') {
-      child.stderr.on('data', buf => {
+      child.stderr.on('data', (buf: string) => {
         const str = buf.toString()
         if (/warning/.test(str)) {
           return
@@ -141,28 +142,28 @@ function executeCommand (command, args, targetDir) {
       })
     }
 
-    child.on('close', code => {
+    child.on('close', (code: number) => {
       if (code !== 0) {
         reject(`command failed: ${command} ${args.join(' ')}`)
         return
       }
-      resolve()
+      resolve(null)
     })
   })
 }
 
-async function installDeps (targetDir, command, cliRegistry) {
+async function installDeps (targetDir: string, command: string, cliRegistry: string) {
   checkPackageManagerIsSupported(command)
-
+	// @ts-ignore
   const args = packageManagerConfig[command].installDeps
 
   await addRegistryToArgs(command, args, cliRegistry)
   await executeCommand(command, args, targetDir)
 }
 
-async function installPackage (targetDir, command, cliRegistry, packageName, dev = true) {
+async function installPackage (targetDir: string, command: string, cliRegistry: string, packageName: string, dev = true) {
   checkPackageManagerIsSupported(command)
-
+	// @ts-ignore
   const args = packageManagerConfig[command].installPackage
 
   if (dev) args.push('-D')
@@ -171,38 +172,31 @@ async function installPackage (targetDir, command, cliRegistry, packageName, dev
 
   args.push(packageName)
 
-  debug(`command: `, command)
-  debug(`args: `, args)
-
   await executeCommand(command, args, targetDir)
 }
 
-async function uninstallPackage (targetDir, command, cliRegistry, packageName) {
+async function uninstallPackage (targetDir: string, command: string, cliRegistry: string, packageName: string,) {
   checkPackageManagerIsSupported(command)
 
+	// @ts-ignore
   const args = packageManagerConfig[command].uninstallPackage
 
   await addRegistryToArgs(command, args, cliRegistry)
 
   args.push(packageName)
 
-  debug(`command: `, command)
-  debug(`args: `, args)
-
   await executeCommand(command, args, targetDir)
 }
 
-async function updatePackage (targetDir, command, cliRegistry, packageName) {
+async function updatePackage (targetDir: string, command: string, cliRegistry: string, packageName: string,) {
   checkPackageManagerIsSupported(command)
 
+	// @ts-ignore
   const args = packageManagerConfig[command].updatePackage
 
   await addRegistryToArgs(command, args, cliRegistry)
 
-  packageName.split(' ').forEach(name => args.push(name))
-
-  debug(`command: `, command)
-  debug(`args: `, args)
+  packageName.split(' ').forEach((name: string) => args.push(name))
 
   await executeCommand(command, args, targetDir)
 }

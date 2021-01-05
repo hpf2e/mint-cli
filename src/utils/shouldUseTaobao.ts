@@ -1,21 +1,21 @@
-// @ts-nocheck
+import chalk from 'chalk';
+// @ts-ignore
+import execa from 'execa';
+import {hasYarn} from './common/env';
+import request from './common/request';
+import inquirer from 'inquirer';
+import registries from './registries';
 
-const chalk = require('chalk')
-const execa = require('execa')
-const { hasYarn, request } = require('./common')
-const inquirer = require('inquirer')
-const registries = require('./registries')
-
-async function ping (registry) {
+async function ping (registry: string) {
   await request.get(`${registry}/react/latest`)
   return registry
 }
 
 
-let checked
-let result
+let checked = false;
+let result = false;
 
-export default async function shouldUseTaobao (command) {
+export default async function shouldUseTaobao (command: string) {
   if (!command) {
     command = hasYarn() ? 'yarn' : 'npm'
   }
@@ -24,7 +24,7 @@ export default async function shouldUseTaobao (command) {
   if (checked) return result
   checked = true
 
-  const save = val => {
+  const save = (val: boolean) => {
     result = val
     return val
   }

@@ -1,11 +1,9 @@
-// @ts-nocheck
+import fs from 'fs-extra';
+import path from 'path';
 
-const fs = require('fs-extra')
-const path = require('path')
-
-function deleteRemovedFiles (directory, newFiles, previousFiles) {
+function deleteRemovedFiles (directory: string, newFiles: Record<string, string>, previousFiles: string) {
   // get all files that are not in the new filesystem and are still existing
-  const filesToDelete = Object.keys(previousFiles)
+	const filesToDelete = Object.keys(previousFiles)
     .filter(filename => !newFiles[filename])
 
   // delete each of these files
@@ -14,7 +12,7 @@ function deleteRemovedFiles (directory, newFiles, previousFiles) {
   }))
 }
 
-export default async function writeFileTree (dir, files, previousFiles) {
+export default async function writeFileTree (dir: string, files: Record<string, string>, previousFiles: string) {
   if (previousFiles) {
     await deleteRemovedFiles(dir, files, previousFiles)
   }

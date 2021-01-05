@@ -1,11 +1,14 @@
-// @ts-nocheck
-
-const descriptions = {
+const descriptions: any = {
   start: '启动项目',
   build: '打包生成线上项目',
 }
 
-function printScripts (pkg, packageManager) {
+type PkgProps = {
+	name?: string;
+	scripts?: string;
+}
+
+function printScripts (pkg: PkgProps, packageManager: string) {
   return Object.keys(pkg.scripts || {}).map(key => {
     if (!descriptions[key]) return ''
     return [
@@ -18,7 +21,7 @@ function printScripts (pkg, packageManager) {
   }).join('')
 }
 
-export default function generateReadme (pkg, packageManager) {
+export default function generateReadme (pkg: PkgProps, packageManager: string) {
   return [
     `# ${pkg.name}\n`,
     '## Project setup',

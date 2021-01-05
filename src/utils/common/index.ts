@@ -1,9 +1,11 @@
-[
-  'logger',
-  'spinner',
-  'exit',
-  'env',
-  'request'
-].forEach(m => {
-  Object.assign(exports, require(`./${m}`))
-})
+export {
+	hasYarn,
+	hasGit,
+	hasProjectYarn,
+	hasProjectGit,
+	hasPnpm3OrLater,
+	hasProjectPnpm,
+	isWindows,
+	isMacintosh,
+	isLinux
+} from './env'

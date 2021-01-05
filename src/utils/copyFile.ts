@@ -1,9 +1,7 @@
-// @ts-nocheck
+import fs from 'fs-extra';
+import path from 'path';
 
-const fs = require('fs-extra')
-const path = require('path')
-
-export default async function copyFile (temp, target) {
+export default async function copyFile (temp: string, target: string) {
   await fs.copy(temp, target)
   await fs.remove(path.resolve(target, './.git'))
   const pkgJson = await fs.readJson(target+'/package.json')

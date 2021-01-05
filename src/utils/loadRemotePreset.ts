@@ -1,13 +1,11 @@
-// @ts-nocheck
-
-const fs = require('fs-extra')
+import fs from 'fs-extra'
 
 const remotePresetMap = {
   redux: 'Walker-Leee/react-temp-mobx',
   mobx: 'Walker-Leee/react-temp-mobx'
 }
 
-export default async function (name, targetDir, clone) {
+export default async function (name: string, targetDir: string, clone: boolean) {
   const os = require('os')
   const path = require('path')
   const download = require('download-git-repo')
@@ -24,9 +22,10 @@ export default async function (name, targetDir, clone) {
   await new Promise((resolve, reject) => {
     
     // 这里可以根据具体的模板地址设置下载的url，注意，如果是git，url后面的branch不能忽略
-    download(remotePresetMap[name], tmpdir, { clone }, (err) => {
+		// @ts-ignore
+		download(remotePresetMap[name], tmpdir, { clone }, (err: Error) => {
       if (err) return reject(err)
-      resolve()
+      resolve(null)
     })
   })
 

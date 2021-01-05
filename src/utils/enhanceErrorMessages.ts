@@ -1,10 +1,8 @@
-// @ts-nocheck
+import program from 'commander';
+import chalk from 'chalk';
 
-const program = require('commander')
-const chalk = require('chalk')
-
-export default (methodName, log) => {
-  program.Command.prototype[methodName] = function (...args) {
+export default (methodName: string, log: (value?: any) => string) => {
+  program.Command.prototype[methodName] = function (...args: any) {
     if (methodName === 'unknownOption' && this._allowUnknownOption) {
       return
     }

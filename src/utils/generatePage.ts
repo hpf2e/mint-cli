@@ -1,16 +1,9 @@
-// @ts-nocheck
-
-const chalk = require('chalk')
-const path = require('path')
-const fs = require('fs-extra')
-const nunjucks = require('nunjucks')
-
-const {
-  log,
-  error,
-  logWithSpinner,
-  stopSpinner,
-} = require('./common')
+import chalk from 'chalk';
+import path from 'path'
+import fs from 'fs-extra'
+import nunjucks from 'nunjucks'
+import {error} from './common/logger';
+import {logWithSpinner, stopSpinner} from './common/spinner';
 
 const tempPath = path.resolve(__dirname, '../../temp')
 const pageTempPath = path.resolve(tempPath, 'page.js')
@@ -18,7 +11,10 @@ const lessTempPath = path.resolve(tempPath, 'page.less')
 const ioTempPath = path.resolve(tempPath, 'io.js')
 const storeTempPath = path.resolve(tempPath, 'store.js')
 
-async function generatePage(context, {lowerName, upperName}) {
+async function generatePage(context: string, {lowerName, upperName}: {
+	lowerName: string;
+	upperName: string
+}) {
   logWithSpinner(`生成 ${chalk.yellow(`${upperName}/${upperName}.js`)}`)
   const ioTemp = await fs.readFile(pageTempPath)
   const ioContent = nunjucks.renderString(ioTemp.toString(), { lowerName, upperName })
@@ -26,7 +22,10 @@ async function generatePage(context, {lowerName, upperName}) {
   stopSpinner()
 }
 
-async function generateLess(context, {lowerName, upperName}) {
+async function generateLess(context: string, {lowerName, upperName}: {
+	lowerName: string;
+	upperName: string
+}) {
   logWithSpinner(`生成 ${chalk.yellow(`${upperName}/${upperName}.less`)}`)
   const ioTemp = await fs.readFile(lessTempPath)
   const ioContent = nunjucks.renderString(ioTemp.toString(), { lowerName, upperName })
@@ -34,7 +33,10 @@ async function generateLess(context, {lowerName, upperName}) {
   stopSpinner()
 }
 
-async function generateIo(context, {lowerName, upperName}) {
+async function generateIo(context: string, {lowerName, upperName}: {
+	lowerName: string;
+	upperName: string
+}) {
   logWithSpinner(`生成 ${chalk.yellow(`${upperName}/io.js`)}`)
   const ioTemp = await fs.readFile(ioTempPath)
   const ioContent = nunjucks.renderString(ioTemp.toString(), { lowerName, upperName })
@@ -43,7 +45,10 @@ async function generateIo(context, {lowerName, upperName}) {
 }
 
 
-async function generateStore(context, {lowerName, upperName}) {
+async function generateStore(context: string, {lowerName, upperName}: {
+	lowerName: string;
+	upperName: string
+}) {
   logWithSpinner(`生成 ${chalk.yellow(`${upperName}/store-${lowerName}.js`)}`)
   const ioTemp = await fs.readFile(storeTempPath)
   const ioContent = nunjucks.renderString(ioTemp.toString(), { lowerName, upperName })
@@ -51,7 +56,10 @@ async function generateStore(context, {lowerName, upperName}) {
   stopSpinner()
 }
 
-export default (context, nameObj) => {
+export default (context: string, nameObj: {
+	lowerName: string;
+	upperName: string
+}) => {
   Promise.all([
     generateIo(context, nameObj),
     generatePage(context, nameObj),

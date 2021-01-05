@@ -1,12 +1,16 @@
-// @ts-nocheck
-
-const ora = require('ora')
-const chalk = require('chalk')
+import ora from 'ora';
+import chalk from 'chalk';
 
 const spinner = ora()
-let lastMsg = null
 
-const logWithSpinner = (symbol, msg) => {
+type LastMsg = null | {
+	symbol: string;
+	text: string
+}
+
+let lastMsg: LastMsg = null;
+
+const logWithSpinner = (symbol: string, msg?: string) => {
   if (!msg) {
     msg = symbol
     symbol = chalk.green('✔')
@@ -25,7 +29,7 @@ const logWithSpinner = (symbol, msg) => {
   spinner.start()
 }
 
-const stopSpinner = (persist) => {
+const stopSpinner = (persist?: boolean) => {
   if (lastMsg && persist !== false) {
     spinner.stopAndPersist({
       symbol: lastMsg.symbol,
@@ -43,4 +47,11 @@ const pauseSpinner = () => {
 
 const resumeSpinner = () => {
   spinner.start()
+}
+
+export {
+	logWithSpinner,
+	stopSpinner,
+	pauseSpinner,
+	resumeSpinner
 }
