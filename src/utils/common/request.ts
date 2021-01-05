@@ -1,4 +1,6 @@
-exports.request = {
+// @ts-nocheck
+
+export default {
   get (uri) {
     // lazy require
     const request = require('request-promise-native')

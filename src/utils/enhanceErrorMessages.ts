@@ -1,7 +1,9 @@
+// @ts-nocheck
+
 const program = require('commander')
 const chalk = require('chalk')
 
-module.exports = (methodName, log) => {
+export default (methodName, log) => {
   program.Command.prototype[methodName] = function (...args) {
     if (methodName === 'unknownOption' && this._allowUnknownOption) {
       return

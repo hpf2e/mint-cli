@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const chalk = require('chalk')
 const path = require('path')
 const fs = require('fs-extra')
@@ -49,7 +51,7 @@ async function generateStore(context, {lowerName, upperName}) {
   stopSpinner()
 }
 
-module.exports = (context, nameObj) => {
+export default (context, nameObj) => {
   Promise.all([
     generateIo(context, nameObj),
     generatePage(context, nameObj),

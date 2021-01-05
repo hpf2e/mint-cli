@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const fs = require('fs-extra')
 const path = require('path')
 
@@ -12,7 +14,7 @@ function deleteRemovedFiles (directory, newFiles, previousFiles) {
   }))
 }
 
-module.exports = async function writeFileTree (dir, files, previousFiles) {
+export default async function writeFileTree (dir, files, previousFiles) {
   if (previousFiles) {
     await deleteRemovedFiles(dir, files, previousFiles)
   }

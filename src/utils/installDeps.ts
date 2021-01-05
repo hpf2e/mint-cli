@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const EventEmitter = require('events')
 const chalk = require('chalk')
 const execa = require('execa')
@@ -149,7 +151,7 @@ function executeCommand (command, args, targetDir) {
   })
 }
 
-exports.installDeps = async function installDeps (targetDir, command, cliRegistry) {
+async function installDeps (targetDir, command, cliRegistry) {
   checkPackageManagerIsSupported(command)
 
   const args = packageManagerConfig[command].installDeps
@@ -158,7 +160,7 @@ exports.installDeps = async function installDeps (targetDir, command, cliRegistr
   await executeCommand(command, args, targetDir)
 }
 
-exports.installPackage = async function (targetDir, command, cliRegistry, packageName, dev = true) {
+async function installPackage (targetDir, command, cliRegistry, packageName, dev = true) {
   checkPackageManagerIsSupported(command)
 
   const args = packageManagerConfig[command].installPackage
@@ -175,7 +177,7 @@ exports.installPackage = async function (targetDir, command, cliRegistry, packag
   await executeCommand(command, args, targetDir)
 }
 
-exports.uninstallPackage = async function (targetDir, command, cliRegistry, packageName) {
+async function uninstallPackage (targetDir, command, cliRegistry, packageName) {
   checkPackageManagerIsSupported(command)
 
   const args = packageManagerConfig[command].uninstallPackage
@@ -190,7 +192,7 @@ exports.uninstallPackage = async function (targetDir, command, cliRegistry, pack
   await executeCommand(command, args, targetDir)
 }
 
-exports.updatePackage = async function (targetDir, command, cliRegistry, packageName) {
+async function updatePackage (targetDir, command, cliRegistry, packageName) {
   checkPackageManagerIsSupported(command)
 
   const args = packageManagerConfig[command].updatePackage
@@ -203,4 +205,11 @@ exports.updatePackage = async function (targetDir, command, cliRegistry, package
   debug(`args: `, args)
 
   await executeCommand(command, args, targetDir)
+}
+
+export {
+	installDeps,
+	installPackage,
+	uninstallPackage,
+	updatePackage
 }

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const fs = require('fs-extra')
 
 const remotePresetMap = {
@@ -5,7 +7,7 @@ const remotePresetMap = {
   mobx: 'Walker-Leee/react-temp-mobx'
 }
 
-module.exports = async function (name, targetDir, clone) {
+export default async function (name, targetDir, clone) {
   const os = require('os')
   const path = require('path')
   const download = require('download-git-repo')

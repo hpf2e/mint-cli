@@ -1,4 +1,6 @@
-module.exports = function loadCommand (commandName, moduleName) {
+// @ts-nocheck
+
+export default function loadCommand (commandName, moduleName) {
   const isNotFoundError = err => {
     return err.message.match(/Cannot find module/)
   }

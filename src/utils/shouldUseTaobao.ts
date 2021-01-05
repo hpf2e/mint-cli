@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const chalk = require('chalk')
 const execa = require('execa')
 const { hasYarn, request } = require('./common')
@@ -13,7 +15,7 @@ async function ping (registry) {
 let checked
 let result
 
-module.exports = async function shouldUseTaobao (command) {
+export default async function shouldUseTaobao (command) {
   if (!command) {
     command = hasYarn() ? 'yarn' : 'npm'
   }

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const registries = {
   npm: 'https://registry.npmjs.org',
   yarn: 'https://registry.yarnpkg.com',
@@ -5,4 +7,4 @@ const registries = {
   pnpm: 'https://registry.npmjs.org'
 }
 
-module.exports = registries
+export default registries
