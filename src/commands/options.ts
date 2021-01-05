@@ -1,4 +1,4 @@
-export const defaultPreset = 'mobx'
+export const defaultPreset = 'mobx';
 
 export const defaults = {
   lastChecked: undefined,
@@ -7,6 +7,6 @@ export const defaults = {
   packageManager: undefined,
   useTaobaoRegistry: undefined,
   presets: {
-    'default': exports.defaultPreset
-  }
-}
+    default: exports.defaultPreset,
+  },
+};

@@ -6,204 +6,216 @@ import readline from 'readline';
 import registries from './registries';
 import shouldUseTaobao from './shouldUseTaobao';
 
-const taobaoDistURL = 'https://npm.taobao.org/dist'
+const taobaoDistURL = 'https://npm.taobao.org/dist';
 
-const supportPackageManagerList = ['npm', 'yarn', 'pnpm']
+const supportPackageManagerList = ['npm', 'yarn', 'pnpm'];
 
 const packageManagerConfig = {
   npm: {
     installDeps: ['install', '--loglevel', 'error'],
     installPackage: ['install', '--loglevel', 'error'],
     uninstallPackage: ['uninstall', '--loglevel', 'error'],
-    updatePackage: ['update', '--loglevel', 'error']
+    updatePackage: ['update', '--loglevel', 'error'],
   },
 
   pnpm: {
     installDeps: ['install', '--loglevel', 'error', '--shamefully-flatten'],
     installPackage: ['install', '--loglevel', 'error'],
     uninstallPackage: ['uninstall', '--loglevel', 'error'],
-    updatePackage: ['update', '--loglevel', 'error']
+    updatePackage: ['update', '--loglevel', 'error'],
   },
 
   yarn: {
     installDeps: [],
     installPackage: ['add'],
     uninstallPackage: ['remove'],
-    updatePackage: ['upgrade']
-  }
-}
+    updatePackage: ['upgrade'],
+  },
+};
 
 class InstallProgress extends EventEmitter {
-	_progress: number;
+  _progress: number;
 
-  constructor () {
-    super()
+  constructor() {
+    super();
 
-    this._progress = -1
+    this._progress = -1;
   }
 
-  get progress () {
-    return this._progress
+  get progress() {
+    return this._progress;
   }
 
-  set progress (value) {
-    this._progress = value
-    this.emit('progress', value)
+  set progress(value) {
+    this._progress = value;
+    this.emit('progress', value);
   }
 
-  get enabled () {
-    return this._progress !== -1
+  get enabled() {
+    return this._progress !== -1;
   }
 
-  set enabled (value) {
-    this.progress = value ? 0 : -1
+  set enabled(value) {
+    this.progress = value ? 0 : -1;
   }
 
-  log (value: string) {
-    this.emit('log', value)
+  log(value: string) {
+    this.emit('log', value);
   }
 }
 
-const progress = exports.progress = new InstallProgress()
+const progress = (exports.progress = new InstallProgress());
 
-function toStartOfLine (stream: NodeJS.WriteStream) {
+function toStartOfLine(stream: NodeJS.WriteStream) {
   if (!chalk.supportsColor) {
-    stream.write('\r')
-    return
+    stream.write('\r');
+    return;
   }
-  readline.cursorTo(stream, 0)
+  readline.cursorTo(stream, 0);
 }
 
-function checkPackageManagerIsSupported (command: string) {
+function checkPackageManagerIsSupported(command: string) {
   if (supportPackageManagerList.indexOf(command) === -1) {
-    throw new Error(`Unknown package manager: ${command}`)
+    throw new Error(`Unknown package manager: ${command}`);
   }
 }
 
-function renderProgressBar (curr: string, total: string) {
-  const ratio = Math.min(Math.max(+curr / +total, 0), 1)
-  const bar = ` ${curr}/${total}`
-  const availableSpace = Math.max(0, process.stderr.columns! - bar.length - 3)
-  const width = Math.min(+total, availableSpace)
-  const completeLength = Math.round(width * ratio)
-  const complete = `#`.repeat(completeLength)
-  const incomplete = `-`.repeat(width - completeLength)
-  toStartOfLine(process.stderr)
-  process.stderr.write(`[${complete}${incomplete}]${bar}`)
+function renderProgressBar(curr: string, total: string) {
+  const ratio = Math.min(Math.max(+curr / +total, 0), 1);
+  const bar = ` ${curr}/${total}`;
+  const availableSpace = Math.max(0, process.stderr.columns! - bar.length - 3);
+  const width = Math.min(+total, availableSpace);
+  const completeLength = Math.round(width * ratio);
+  const complete = `#`.repeat(completeLength);
+  const incomplete = `-`.repeat(width - completeLength);
+  toStartOfLine(process.stderr);
+  process.stderr.write(`[${complete}${incomplete}]${bar}`);
 }
 
-async function addRegistryToArgs (command: string, args: string[], cliRegistry: string) {
-  const altRegistry = (
-    cliRegistry || (
-      (await shouldUseTaobao(command))
-        ? registries.taobao
-        : null
-    )
-  )
+async function addRegistryToArgs(
+  command: string,
+  args: string[],
+  cliRegistry: string,
+) {
+  const altRegistry =
+    cliRegistry ||
+    ((await shouldUseTaobao(command)) ? registries.taobao : null);
 
   if (altRegistry) {
-    args.push(`--registry=${altRegistry}`)
+    args.push(`--registry=${altRegistry}`);
     if (altRegistry === registries.taobao) {
-      args.push(`--disturl=${taobaoDistURL}`)
+      args.push(`--disturl=${taobaoDistURL}`);
     }
   }
 }
 
-function executeCommand (command: string, args: string[], targetDir: string) {
+function executeCommand(command: string, args: string[], targetDir: string) {
   return new Promise((resolve, reject) => {
-
-    progress.enabled = false
+    progress.enabled = false;
 
     const child = execa(command, args, {
       cwd: targetDir,
       // stdio: ['inherit', 'inherit', 'inherit']
-    })
+    });
 
-
-    
     // filter out unwanted yarn output
     if (command === 'yarn') {
       child.stderr.on('data', (buf: string) => {
-        const str = buf.toString()
+        const str = buf.toString();
         if (/warning/.test(str)) {
-          return
+          return;
         }
 
         // progress bar
-        const progressBarMatch = str.match(/\[.*\] (\d+)\/(\d+)/)
+        const progressBarMatch = str.match(/\[.*\] (\d+)\/(\d+)/);
         if (progressBarMatch) {
           // since yarn is in a child process, it's unable to get the width of
           // the terminal. reimplement the progress bar ourselves!
-          renderProgressBar(progressBarMatch[1], progressBarMatch[2])
-          return
+          renderProgressBar(progressBarMatch[1], progressBarMatch[2]);
+          return;
         }
 
-        process.stderr.write(buf)
-      })
+        process.stderr.write(buf);
+      });
     }
 
     child.on('close', (code: number) => {
       if (code !== 0) {
-        reject(`command failed: ${command} ${args.join(' ')}`)
-        return
+        reject(`command failed: ${command} ${args.join(' ')}`);
+        return;
       }
-      resolve(null)
-    })
-  })
+      resolve(null);
+    });
+  });
 }
 
-async function installDeps (targetDir: string, command: string, cliRegistry: string) {
-  checkPackageManagerIsSupported(command)
-	// @ts-ignore
-  const args = packageManagerConfig[command].installDeps
+async function installDeps(
+  targetDir: string,
+  command: string,
+  cliRegistry: string,
+) {
+  checkPackageManagerIsSupported(command);
+  // @ts-ignore
+  const args = packageManagerConfig[command].installDeps;
 
-  await addRegistryToArgs(command, args, cliRegistry)
-  await executeCommand(command, args, targetDir)
+  await addRegistryToArgs(command, args, cliRegistry);
+  await executeCommand(command, args, targetDir);
 }
 
-async function installPackage (targetDir: string, command: string, cliRegistry: string, packageName: string, dev = true) {
-  checkPackageManagerIsSupported(command)
-	// @ts-ignore
-  const args = packageManagerConfig[command].installPackage
+async function installPackage(
+  targetDir: string,
+  command: string,
+  cliRegistry: string,
+  packageName: string,
+  dev = true,
+) {
+  checkPackageManagerIsSupported(command);
+  // @ts-ignore
+  const args = packageManagerConfig[command].installPackage;
 
-  if (dev) args.push('-D')
+  if (dev) args.push('-D');
 
-  await addRegistryToArgs(command, args, cliRegistry)
+  await addRegistryToArgs(command, args, cliRegistry);
 
-  args.push(packageName)
+  args.push(packageName);
 
-  await executeCommand(command, args, targetDir)
+  await executeCommand(command, args, targetDir);
 }
 
-async function uninstallPackage (targetDir: string, command: string, cliRegistry: string, packageName: string,) {
-  checkPackageManagerIsSupported(command)
+async function uninstallPackage(
+  targetDir: string,
+  command: string,
+  cliRegistry: string,
+  packageName: string,
+) {
+  checkPackageManagerIsSupported(command);
 
-	// @ts-ignore
-  const args = packageManagerConfig[command].uninstallPackage
+  // @ts-ignore
+  const args = packageManagerConfig[command].uninstallPackage;
 
-  await addRegistryToArgs(command, args, cliRegistry)
+  await addRegistryToArgs(command, args, cliRegistry);
 
-  args.push(packageName)
+  args.push(packageName);
 
-  await executeCommand(command, args, targetDir)
+  await executeCommand(command, args, targetDir);
 }
 
-async function updatePackage (targetDir: string, command: string, cliRegistry: string, packageName: string,) {
-  checkPackageManagerIsSupported(command)
+async function updatePackage(
+  targetDir: string,
+  command: string,
+  cliRegistry: string,
+  packageName: string,
+) {
+  checkPackageManagerIsSupported(command);
 
-	// @ts-ignore
-  const args = packageManagerConfig[command].updatePackage
+  // @ts-ignore
+  const args = packageManagerConfig[command].updatePackage;
 
-  await addRegistryToArgs(command, args, cliRegistry)
+  await addRegistryToArgs(command, args, cliRegistry);
 
-  packageName.split(' ').forEach((name: string) => args.push(name))
+  packageName.split(' ').forEach((name: string) => args.push(name));
 
-  await executeCommand(command, args, targetDir)
+  await executeCommand(command, args, targetDir);
 }
 
-export {
-	installDeps,
-	installPackage,
-	uninstallPackage,
-	updatePackage
-}
+export { installDeps, installPackage, uninstallPackage, updatePackage };

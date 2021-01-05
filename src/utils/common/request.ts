@@ -1,15 +1,15 @@
 export default {
-  get (uri: string) {
+  get(uri: string) {
     // lazy require
-    const request = require('request-promise-native')
+    const request = require('request-promise-native');
     const reqOpts = {
       method: 'GET',
       timeout: 30000,
       resolveWithFullResponse: true,
       json: true,
-      uri
-    }
+      uri,
+    };
 
-    return request(reqOpts)
-  }
-}
+    return request(reqOpts);
+  },
+};

@@ -2,16 +2,13 @@ import chalk from 'chalk';
 import EventEmitter from 'events';
 import fs from 'fs-extra';
 import generatePage from '../utils/generatePage';
-import {logWithSpinner, stopSpinner} from '../utils/common/spinner';
-import {
-  log,
-  clearConsole,
-} from '../utils/common/logger';
+import { logWithSpinner, stopSpinner } from '../utils/common/spinner';
+import { log, clearConsole } from '../utils/common/logger';
 
 export default class PageCreator extends EventEmitter {
-	name: string;
-	context: string;
-	
+  name: string;
+  context: string;
+
   constructor(name: string, context: string) {
     super();
 

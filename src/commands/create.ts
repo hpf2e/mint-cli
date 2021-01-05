@@ -4,9 +4,9 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import Creator from './Creator';
 import validatePackageName from 'validate-npm-package-name';
-import {error, clearConsole} from '../utils/common/logger'
-import {stopSpinner} from '../utils/common/spinner'
-import exit from '../utils/common/exit'
+import { error, clearConsole } from '../utils/common/logger';
+import { stopSpinner } from '../utils/common/spinner';
+import exit from '../utils/common/exit';
 
 /**
  * 创建项目

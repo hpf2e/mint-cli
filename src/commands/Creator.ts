@@ -12,16 +12,16 @@ import { defaults } from './options';
 import {
   hasYarn,
   hasGit,
-	hasProjectGit,
-	hasPnpm3OrLater
+  hasProjectGit,
+  hasPnpm3OrLater,
 } from '../utils/common/env';
-import {log, warn, error, clearConsole} from '../utils/common/logger'
+import { log, warn, error, clearConsole } from '../utils/common/logger';
 import exit from '../utils/common/exit';
-import {logWithSpinner, stopSpinner} from '../utils/common/spinner';
+import { logWithSpinner, stopSpinner } from '../utils/common/spinner';
 
 export default class Creator extends EventEmitter {
-	name: string;
-	context: string;
+  name: string;
+  context: string;
 
   constructor(name: string, context: string) {
     super();
@@ -69,8 +69,8 @@ export default class Creator extends EventEmitter {
       },
     ]);
 
-		// 将下载的临时文件拷贝到项目中
-		// @ts-ignore
+    // 将下载的临时文件拷贝到项目中
+    // @ts-ignore
     const pkgJson = await copyFile(preset.tmpdir, preset.targetDir);
 
     const pkg = Object.assign(pkgJson, {

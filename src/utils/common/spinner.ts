@@ -1,57 +1,52 @@
 import ora from 'ora';
 import chalk from 'chalk';
 
-const spinner = ora()
+const spinner = ora();
 
 type LastMsg = null | {
-	symbol: string;
-	text: string
-}
+  symbol: string;
+  text: string;
+};
 
 let lastMsg: LastMsg = null;
 
 const logWithSpinner = (symbol: string, msg?: string) => {
   if (!msg) {
-    msg = symbol
-    symbol = chalk.green('✔')
+    msg = symbol;
+    symbol = chalk.green('✔');
   }
   if (lastMsg) {
     spinner.stopAndPersist({
       symbol: lastMsg.symbol,
-      text: lastMsg.text
-    })
+      text: lastMsg.text,
+    });
   }
-  spinner.text = ' ' + msg
+  spinner.text = ' ' + msg;
   lastMsg = {
     symbol: symbol + ' ',
-    text: msg
-  }
-  spinner.start()
-}
+    text: msg,
+  };
+  spinner.start();
+};
 
 const stopSpinner = (persist?: boolean) => {
   if (lastMsg && persist !== false) {
     spinner.stopAndPersist({
       symbol: lastMsg.symbol,
-      text: lastMsg.text
-    })
+      text: lastMsg.text,
+    });
   } else {
-    spinner.stop()
+    spinner.stop();
   }
-  lastMsg = null
-}
+  lastMsg = null;
+};
 
 const pauseSpinner = () => {
-  spinner.stop()
-}
+  spinner.stop();
+};
 
 const resumeSpinner = () => {
-  spinner.start()
-}
+  spinner.start();
+};
 
-export {
-	logWithSpinner,
-	stopSpinner,
-	pauseSpinner,
-	resumeSpinner
-}
+export { logWithSpinner, stopSpinner, pauseSpinner, resumeSpinner };
