@@ -4,7 +4,7 @@ import fs from 'fs-extra';
 import generatePage from '../utils/generatePage';
 import { logWithSpinner, stopSpinner } from '../utils/common/spinner';
 import { log, clearConsole } from '../utils/common/logger';
-import Apk from '../../package.json'
+import Apk from '../../package.json';
 
 export default class PageCreator extends EventEmitter {
   name: string;
@@ -21,11 +21,7 @@ export default class PageCreator extends EventEmitter {
     const fileNameObj = this.getName();
     const { context } = this;
     await clearConsole();
-    log(
-      chalk.blue.bold(
-        `mint CLI v${Apk.version}`,
-      ),
-    );
+    log(chalk.blue.bold(`mint CLI v${Apk.version}`));
     logWithSpinner(`✨`, `正在创建页面...`);
     // 创建文件夹
     await fs.mkdir(context, { recursive: true });

@@ -13,7 +13,7 @@ import exit from '../utils/common/exit';
  * @param {*} projectName
  * @param {*} options
  */
-async function create(projectName = '', options?: any) {
+const create = async (projectName = '', options?: any) => {
   const cwd = options.cwd || process.cwd();
   // 是否在当前目录
   const inCurrent = projectName === '.';
@@ -77,12 +77,9 @@ async function create(projectName = '', options?: any) {
 
   // 前面完成准备工作，正式开始创建项目
   const creator = new Creator(name, targetDir);
-  await creator.create(options);
-}
+  // await creator.create(options);
+};
 
 export default (...args: any) => {
-  return create(...args).catch((err) => {
-    stopSpinner(false);
-    error(err);
-  });
+  return create(...args);
 };

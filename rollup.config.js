@@ -18,11 +18,11 @@ const rollupConfig = {
   output: [ // 打包出口
     {
       file: path.join(paths.output, 'index.js'),  // 引出的方式为umd的方式
-      format: 'umd',
+      format: 'cjs',
       name: pkg.name,
     },
   ],
-  external: ['@babel/runtime'], // 指出应将哪些模块视为外部模块，如 Peer dependencies 中的依赖
+  // external: ['@babel/runtime'], // 指出应将哪些模块视为外部模块，如 Peer dependencies 中的依赖
   plugins: [
     // 验证导入的文件
     eslint({
@@ -31,28 +31,28 @@ const rollupConfig = {
       include: ['src/**/*.ts'],
       exclude: ['node_modules/**', 'lib/**', '*.js'],
 		}),
-		// 使得 rollup 支持 commonjs 规范，识别 commonjs 规范的依赖
-		commonjs(),
-    // 配合 commnjs 解析第三方模块
-    nodeResolve({
-      // 将自定义选项传递给解析插件
-      customResolveOptions: {
-        moduleDirectory: 'node_modules',
-      },
-		}),
 		typescript(),
 		json(),
     babel({
-			babelHelpers: 'runtime',
-			skipPreflightCheck: true,
-      // 只转换源代码，不运行外部依赖
-      exclude: 'node_modules/**',
-      // babel 默认不支持 ts 需要手动添加
+			// babelHelpers: 'runtime',
+			// skipPreflightCheck: true,
+      // // 只转换源代码，不运行外部依赖
+      // exclude: 'node_modules/**',
+      // // babel 默认不支持 ts 需要手动添加
       extensions: [
         ...DEFAULT_EXTENSIONS,
         '.ts',
       ],
     }),
+		// 使得 rollup 支持 commonjs 规范，识别 commonjs 规范的依赖
+		commonjs(),
+    // 配合 commnjs 解析第三方模块
+    nodeResolve({
+      // // 将自定义选项传递给解析插件
+      // customResolveOptions: {
+      //   moduleDirectory: 'node_modules',
+      // },
+		}),
   ],
 }
 

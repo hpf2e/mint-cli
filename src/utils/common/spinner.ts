@@ -1,7 +1,7 @@
-import ora from 'ora';
 import chalk from 'chalk';
+const ora = require('ora');
 
-const spinner = ora();
+const spinner = ora('');
 
 type LastMsg = null | {
   symbol: string;

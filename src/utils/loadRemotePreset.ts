@@ -1,8 +1,9 @@
 import fs from 'fs-extra';
 import os from 'os';
 import path from 'path';
-import download from 'download-git-repo';
-	
+// @ts-ignore
+const download = require('download-git-repo');
+
 const remotePresetMap = {
   redux: 'Walker-Leee/react-temp-mobx',
   mobx: 'Walker-Leee/react-temp-mobx',
@@ -13,7 +14,6 @@ export default async function (
   targetDir: string,
   clone: boolean,
 ) {
-  
   const tmpdir = path.join(os.tmpdir(), 'mint-cli');
 
   // clone will fail if tmpdir already exists
@@ -29,7 +29,7 @@ export default async function (
     // @ts-ignore
     download(remotePresetMap[name], tmpdir, { clone }, (err: Error) => {
       if (err) return reject(err);
-      resolve(null);
+      resolve('');
     });
   });
 
