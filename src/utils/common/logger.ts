@@ -40,7 +40,7 @@ const error = (msg, tag = null) => {
   }
 }
 
-const clearConsole = title => {
+const clearConsole = (title?: string) => {
   if (process.stdout.isTTY) {
     const blank = '\n'.repeat(process.stdout.rows)
     console.log(blank)

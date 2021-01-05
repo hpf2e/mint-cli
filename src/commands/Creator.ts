@@ -1,6 +1,5 @@
-// @ts-nocheck
-
 import chalk from 'chalk';
+// @ts-ignore
 import execa from 'execa';
 import inquirer from 'inquirer';
 import EventEmitter from 'events';
@@ -9,23 +8,22 @@ import writeFileTree from '../utils/writeFileTree';
 import copyFile from '../utils/copyFile';
 import generateReadme from '../utils/generateReadme';
 import { installDeps } from '../utils/installDeps';
-
-import { defaults } from '../options';
-
+import { defaults } from './options';
 import {
-  log,
-  error,
   hasYarn,
   hasGit,
-  hasProjectGit,
-  logWithSpinner,
-  clearConsole,
-  stopSpinner,
-  exit,
-} from '../utils/common';
+	hasProjectGit,
+	hasPnpm3OrLater
+} from '../utils/common/env';
+import {log, warn, error, clearConsole} from '../utils/common/logger'
+import exit from '../utils/common/exit';
+import {logWithSpinner, stopSpinner} from '../utils/common/spinner';
 
 export default class Creator extends EventEmitter {
-  constructor(name, context) {
+	name: string;
+	context: string;
+
+  constructor(name: string, context: string) {
     super();
 
     this.name = name;
@@ -34,7 +32,7 @@ export default class Creator extends EventEmitter {
     this.run = this.run.bind(this);
   }
 
-  async create(cliOptions = {}, preset = null) {
+  async create(cliOptions: any = {}, preset = null) {
     const { run, name, context } = this;
 
     if (cliOptions.preset) {
@@ -71,7 +69,8 @@ export default class Creator extends EventEmitter {
       },
     ]);
 
-    // 将下载的临时文件拷贝到项目中
+		// 将下载的临时文件拷贝到项目中
+		// @ts-ignore
     const pkgJson = await copyFile(preset.tmpdir, preset.targetDir);
 
     const pkg = Object.assign(pkgJson, {
@@ -97,7 +96,7 @@ export default class Creator extends EventEmitter {
     if (shouldInitGit) {
       logWithSpinner(`🗃`, `初始化Git仓库`);
       this.emit('creation', { event: 'git-init' });
-      await run('git init');
+      await run('git init', '');
     }
 
     // 安装依赖
@@ -152,7 +151,7 @@ export default class Creator extends EventEmitter {
     }
   }
 
-  async resolvePreset(name, clone) {
+  async resolvePreset(name: string, clone: boolean) {
     let preset;
     logWithSpinner(`Fetching remote preset ${chalk.cyan(name)}...`);
     this.emit('creation', { event: 'fetch-remote-preset' });
@@ -176,14 +175,14 @@ export default class Creator extends EventEmitter {
     return preset;
   }
 
-  run(command, args) {
+  run(command: string, args?: any) {
     if (!args) {
       [command, ...args] = command.split(/\s+/);
     }
     return execa(command, args, { cwd: this.context });
   }
 
-  shouldInitGit(cliOptions) {
+  shouldInitGit(cliOptions: any) {
     if (!hasGit()) {
       return false;
     }

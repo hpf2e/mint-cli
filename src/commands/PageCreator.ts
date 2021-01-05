@@ -1,22 +1,18 @@
-// @ts-nocheck
-
-const chalk = require('chalk');
-const EventEmitter = require('events');
-const fs = require('fs-extra');
-
-const generatePage = require('../utils/generatePage');
-
-const {
+import chalk from 'chalk';
+import EventEmitter from 'events';
+import fs from 'fs-extra';
+import generatePage from '../utils/generatePage';
+import {logWithSpinner, stopSpinner} from '../utils/common/spinner';
+import {
   log,
-  error,
-  logWithSpinner,
   clearConsole,
-  stopSpinner,
-  exit,
-} = require('../utils/common');
+} from '../utils/common/logger';
 
 export default class PageCreator extends EventEmitter {
-  constructor(name, context) {
+	name: string;
+	context: string;
+	
+  constructor(name: string, context: string) {
     super();
 
     this.name = name;

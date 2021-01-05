@@ -12,7 +12,7 @@ function deleteRemovedFiles (directory: string, newFiles: Record<string, string>
   }))
 }
 
-export default async function writeFileTree (dir: string, files: Record<string, string>, previousFiles: string) {
+export default async function writeFileTree (dir: string, files: Record<string, string>, previousFiles?: string) {
   if (previousFiles) {
     await deleteRemovedFiles(dir, files, previousFiles)
   }

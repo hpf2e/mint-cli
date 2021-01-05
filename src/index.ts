@@ -1,9 +1,11 @@
 // 检测node版本相关依赖
 import chalk from 'chalk';
 import semver from 'semver';
+import create from './commands/create';
+import Apk from '../package.json';
 
-import test from './commands/create';
-const requiredVersion = require('../package.json').engines.node;
+const requiredVersion = Apk.engines.node;
+const version = Apk.version;
 
 /**
  * 检测node版本函数
@@ -42,7 +44,7 @@ if (semver.satisfies(process.version, '9.x')) {
 import program, { Command, Option } from 'commander';
 import minimist from 'minimist';
 
-program.version(require('../package').version).usage('<command> [options]');
+program.version(version).usage('<command> [options]');
 
 // 创建命令
 program
@@ -62,7 +64,7 @@ program
         ),
       );
     }
-    test(name, options);
+    create(name, options);
   });
 
 // 创建页面命令

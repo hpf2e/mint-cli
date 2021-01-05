@@ -1,19 +1,19 @@
-// @ts-nocheck
-
 import fs from 'fs-extra';
 import path from 'path';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import PageCreator from './PageCreator';
 import validFileName from 'valid-filename';
-import { error, stopSpinner, exit, clearConsole } from '../utils/common';
+import { error, clearConsole } from '../utils/common/logger';
+import { stopSpinner } from '../utils/common/spinner';
+import exit from '../utils/common/exit';
 
 /**
  * 创建项目
  * @param {*} pageName
  * @param {*} options
  */
-async function create(pageName, options) {
+async function create(pageName = '', options?: any) {
   // 检测文件名是否合规
   const result = validFileName(pageName);
   // 如果所输入的不是合法npm包名，则退出
@@ -69,7 +69,7 @@ async function create(pageName, options) {
   await pageCreator.create(options);
 }
 
-export default (...args) => {
+export default (...args: any) => {
   return create(...args).catch((err) => {
     stopSpinner(false);
     error(err);
