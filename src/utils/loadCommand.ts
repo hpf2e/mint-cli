@@ -1,17 +1,22 @@
+import chalk from 'chalk';
+// @ts-ignore
+import importGlobal from 'import-global';
+import { hasYarn, hasPnpm3OrLater } from '../utils/common/env'
+
 export default function loadCommand(commandName: string, moduleName: string) {
   const isNotFoundError = (err: Error) => {
     return err.message.match(/Cannot find module/);
   };
   try {
-    return require(moduleName);
+    return import (moduleName);
   } catch (err) {
     if (isNotFoundError(err)) {
       try {
-        return require('import-global')(moduleName);
+        return importGlobal(moduleName);
       } catch (err2) {
         if (isNotFoundError(err2)) {
-          const chalk = require('chalk');
-          const { hasYarn, hasPnpm3OrLater } = require('../utils/common');
+          
+          
           let installCommand = `npm install -g`;
           if (hasYarn()) {
             installCommand = `yarn global add`;
@@ -21,7 +26,7 @@ export default function loadCommand(commandName: string, moduleName: string) {
           console.log();
           console.log(
             `  命令 ${chalk.cyan(
-              `awesome-test ${commandName}`,
+              `mint ${commandName}`,
             )} 依赖一些全局的插件\n` +
               `  请执行 ${chalk.cyan(
                 `${installCommand} ${moduleName}`,

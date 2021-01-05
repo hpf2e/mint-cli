@@ -1,7 +1,9 @@
+import request from 'request-promise-native';
+
 export default {
   get(uri: string) {
     // lazy require
-    const request = require('request-promise-native');
+    
     const reqOpts = {
       method: 'GET',
       timeout: 30000,

@@ -1,5 +1,8 @@
 import fs from 'fs-extra';
-
+import os from 'os';
+import path from 'path';
+import download from 'download-git-repo';
+	
 const remotePresetMap = {
   redux: 'Walker-Leee/react-temp-mobx',
   mobx: 'Walker-Leee/react-temp-mobx',
@@ -10,10 +13,8 @@ export default async function (
   targetDir: string,
   clone: boolean,
 ) {
-  const os = require('os');
-  const path = require('path');
-  const download = require('download-git-repo');
-  const tmpdir = path.join(os.tmpdir(), 'awesome-test-cli');
+  
+  const tmpdir = path.join(os.tmpdir(), 'mint-cli');
 
   // clone will fail if tmpdir already exists
   // https://github.com/flipxfx/download-git-repo/issues/41

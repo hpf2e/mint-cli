@@ -1,13 +1,14 @@
 {
-  "name": "bigboy-template-tools",
+  "name": "mint-cli",
   "version": "0.0.1",
-  "description": "工具库生成模板",
+  "description": "mint cli 工具生成",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "bin": {
-    "awesome-test": "bin/main.js"
+    "mint": "bin/main.js"
   },
   "files": [
+    "bin",
     "lib",
     "LICENSE",
     "CHANGELOG.md",
@@ -53,6 +54,8 @@
   },
   "dependencies": {
     "core-js": "^3.8.0",
+    "download-git-repo": "^3.0.2",
+    "import-global": "^0.1.0",
     "lodash.assign": "^4.2.0",
     "lodash.debounce": "^4.0.8",
     "nunjucks": "^3.2.2",
@@ -64,11 +67,16 @@
     "@babel/cli": "^7.12.8",
     "@babel/core": "^7.12.9",
     "@babel/node": "^7.12.6",
+    "@babel/plugin-transform-runtime": "^7.12.10",
     "@babel/preset-env": "^7.12.7",
     "@babel/preset-typescript": "^7.12.7",
+    "@babel/runtime": "^7.12.5",
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
     "@microsoft/api-extractor": "^7.12.0",
+    "@rollup/plugin-babel": "^5.2.2",
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-eslint": "^8.0.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
     "@types/execa": "^2.0.0",
@@ -79,6 +87,7 @@
     "@types/lodash.assign": "^4.2.6",
     "@types/lru-cache": "^5.1.0",
     "@types/nunjucks": "^3.1.3",
+    "@types/request-promise-native": "^1.0.17",
     "@types/semver": "^7.3.4",
     "@types/validate-npm-package-name": "^3.0.2",
     "@typescript-eslint/eslint-plugin": "^4.8.2",

@@ -4,6 +4,7 @@ import fs from 'fs-extra';
 import generatePage from '../utils/generatePage';
 import { logWithSpinner, stopSpinner } from '../utils/common/spinner';
 import { log, clearConsole } from '../utils/common/logger';
+import Apk from '../../package.json'
 
 export default class PageCreator extends EventEmitter {
   name: string;
@@ -22,7 +23,7 @@ export default class PageCreator extends EventEmitter {
     await clearConsole();
     log(
       chalk.blue.bold(
-        `Awesome-test CLI v${require('../package.json').version}`,
+        `mint CLI v${Apk.version}`,
       ),
     );
     logWithSpinner(`✨`, `正在创建页面...`);

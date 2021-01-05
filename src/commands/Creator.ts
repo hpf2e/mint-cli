@@ -18,6 +18,7 @@ import {
 import { log, warn, error, clearConsole } from '../utils/common/logger';
 import exit from '../utils/common/exit';
 import { logWithSpinner, stopSpinner } from '../utils/common/spinner';
+import Apk from '../../package.json'
 
 export default class Creator extends EventEmitter {
   name: string;
@@ -36,7 +37,7 @@ export default class Creator extends EventEmitter {
     const { run, name, context } = this;
 
     if (cliOptions.preset) {
-      // awesome-test create foo --preset mobx
+      // mint create foo --preset mobx
       preset = await this.resolvePreset(cliOptions.preset, cliOptions.clone);
     } else {
       preset = await this.resolvePreset(
@@ -48,7 +49,7 @@ export default class Creator extends EventEmitter {
     await clearConsole();
     log(
       chalk.blue.bold(
-        `Awesome-test CLI v${require('../package.json').version}`,
+        `mint CLI v${Apk.version}`,
       ),
     );
     logWithSpinner(`✨`, `正在创建项目 ${chalk.yellow(context)}.`);
@@ -65,7 +66,7 @@ export default class Creator extends EventEmitter {
       {
         name: 'pkgDes',
         message: `请输入项目简介`,
-        default: 'project created by awesome-test-cli',
+        default: 'project created by mint-cli',
       },
     ]);
 

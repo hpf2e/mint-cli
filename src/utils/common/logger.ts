@@ -1,9 +1,9 @@
 // @ts-nocheck
 
-const chalk = require('chalk');
-const readline = require('readline');
-const padStart = require('string.prototype.padstart');
-const EventEmitter = require('events');
+import chalk from 'chalk';
+import readline from 'readline';
+import padStart from 'string.prototype.padstart';
+import EventEmitter from 'events';
 
 const events = new EventEmitter();
 
