@@ -64,7 +64,7 @@ class InstallProgress extends EventEmitter {
   }
 }
 
-const progress = (exports.progress = new InstallProgress());
+const progress = new InstallProgress();
 
 function toStartOfLine(stream: NodeJS.WriteStream) {
   if (!chalk.supportsColor) {

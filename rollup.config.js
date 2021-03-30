@@ -36,9 +36,9 @@ const rollupConfig = {
     babel({
 			// babelHelpers: 'runtime',
 			// skipPreflightCheck: true,
-      // // 只转换源代码，不运行外部依赖
+      // 只转换源代码，不运行外部依赖
       // exclude: 'node_modules/**',
-      // // babel 默认不支持 ts 需要手动添加
+      // babel 默认不支持 ts 需要手动添加
       extensions: [
         ...DEFAULT_EXTENSIONS,
         '.ts',

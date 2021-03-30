@@ -1,9 +1,9 @@
 import fs from 'fs-extra';
 import path from 'path';
-import chalk from 'chalk';
-import inquirer from 'inquirer';
+import chalk from 'chalk'; // Terminal string styling done right
+import inquirer from 'inquirer'; // A collection of common interactive command line user interfaces.
+import validatePackageName from 'validate-npm-package-name'; // Give me a string and I'll tell you if it's a valid npm package nam
 import Creator from './Creator';
-import validatePackageName from 'validate-npm-package-name';
 import { error, clearConsole } from '../utils/common/logger';
 import { stopSpinner } from '../utils/common/spinner';
 import exit from '../utils/common/exit';
@@ -77,7 +77,7 @@ const create = async (projectName = '', options?: any) => {
 
   // 前面完成准备工作，正式开始创建项目
   const creator = new Creator(name, targetDir);
-  // await creator.create(options);
+  await creator.create(options);
 };
 
 export default (...args: any) => {

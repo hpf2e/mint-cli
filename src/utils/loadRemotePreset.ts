@@ -5,8 +5,8 @@ import path from 'path';
 const download = require('download-git-repo');
 
 const remotePresetMap = {
-  redux: 'Walker-Leee/react-temp-mobx',
-  mobx: 'Walker-Leee/react-temp-mobx',
+  redux: 'hpf2e/mint-template-h5',
+  mobx: 'hpf2e/mint-template-h5',
 };
 
 export default async function (

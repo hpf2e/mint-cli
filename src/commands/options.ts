@@ -7,6 +7,6 @@ export const defaults = {
   packageManager: undefined,
   useTaobaoRegistry: undefined,
   presets: {
-    default: exports.defaultPreset,
+    defaultPreset,
   },
 };

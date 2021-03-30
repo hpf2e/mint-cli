@@ -1,5 +1,4 @@
 import chalk from 'chalk';
-// @ts-ignore
 import execa from 'execa';
 import inquirer from 'inquirer';
 import EventEmitter from 'events';
@@ -34,14 +33,14 @@ export default class Creator extends EventEmitter {
     this.shouldInitGit = this.shouldInitGit.bind(this);
   }
 
-  async create(cliOptions: any = {}, preset = null) {
+  async create(cliOptions: any = {}, preset?: any) {
     const { run, name, context } = this;
     if (cliOptions.preset) {
       // mint create foo --preset mobx
       preset = await this.resolvePreset(cliOptions.preset, cliOptions.clone);
     } else {
       preset = await this.resolvePreset(
-        defaults.presets.default,
+        defaults.presets.defaultPreset,
         cliOptions.clone,
       );
     }
@@ -50,12 +49,13 @@ export default class Creator extends EventEmitter {
     logWithSpinner(`✨`, `正在创建项目 ${chalk.yellow(context)}.`);
     this.emit('creation', { event: 'creating' });
     stopSpinner();
+
     // 设置文件名，版本号等
     const { pkgVers, pkgDes } = await inquirer.prompt([
       {
         name: 'pkgVers',
         message: `请输入项目版本号`,
-        default: '1.0.0',
+        default: '0.0.1',
       },
       {
         name: 'pkgDes',
@@ -64,7 +64,6 @@ export default class Creator extends EventEmitter {
       },
     ]);
     // 将下载的临时文件拷贝到项目中
-    // @ts-ignore
     const pkgJson = await copyFile(preset.tmpdir, preset.targetDir);
     const pkg = Object.assign(pkgJson, {
       version: pkgVers,
@@ -137,7 +136,7 @@ export default class Creator extends EventEmitter {
   }
 
   async resolvePreset(name: string, clone: boolean) {
-    let preset;
+    let preset = null;
     logWithSpinner(`Fetching remote preset ${chalk.cyan(name)}...`);
     this.emit('creation', { event: 'fetch-remote-preset' });
     try {
@@ -150,7 +149,7 @@ export default class Creator extends EventEmitter {
     }
     // 默认使用default参数
     if (name === 'default' && !preset) {
-      preset = defaults.presets.default;
+      preset = defaults.presets.defaultPreset;
     }
     if (!preset) {
       error(`preset "${name}" not found.`);
