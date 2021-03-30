@@ -29,7 +29,6 @@ export default class PageCreator extends EventEmitter {
 
     stopSpinner();
 
-    console.log(context);
     await generatePage(context, fileNameObj);
   }
 
