@@ -22,7 +22,7 @@ const rollupConfig = {
       name: pkg.name,
     },
   ],
-  // external: ['@babel/runtime'], // 指出应将哪些模块视为外部模块，如 Peer dependencies 中的依赖
+  // external: ['lodash'], // 指出应将哪些模块视为外部模块，如 Peer dependencies 中的依赖
   plugins: [
     // 验证导入的文件
     eslint({
@@ -34,7 +34,10 @@ const rollupConfig = {
 		typescript(),
 		json(),
     babel({
-			// babelHelpers: 'runtime',
+			babelHelpers: 'runtime',
+			plugins: [
+				'@babel/plugin-transform-runtime'
+			],
 			// skipPreflightCheck: true,
       // 只转换源代码，不运行外部依赖
       // exclude: 'node_modules/**',
@@ -48,6 +51,7 @@ const rollupConfig = {
 		commonjs(),
     // 配合 commnjs 解析第三方模块
     nodeResolve({
+			preferBuiltins: true
       // // 将自定义选项传递给解析插件
       // customResolveOptions: {
       //   moduleDirectory: 'node_modules',
