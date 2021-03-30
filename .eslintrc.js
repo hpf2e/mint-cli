@@ -38,5 +38,6 @@ module.exports = {
 		'prefer-const': 0,
 		'no-console': 0,
 		'semi': ['error', 'always'],
+		'@typescript-eslint/explicit-member-accessibility': 0
 	}
 };

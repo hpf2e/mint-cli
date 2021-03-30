@@ -1,6 +1,5 @@
 import EventEmitter from 'events';
 import chalk from 'chalk';
-//@ts-ignore
 import execa from 'execa';
 import readline from 'readline';
 import registries from './registries';
