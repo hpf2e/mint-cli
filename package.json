@@ -1,11 +1,11 @@
 {
-  "name": "mint-cli",
-  "version": "0.0.1",
+  "name": "mintz-cli",
+  "version": "0.0.4",
   "description": "mint cli 工具生成",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "bin": {
-    "mint": "bin/main.js"
+    "mintz": "bin/main.js"
   },
   "files": [
     "bin",
